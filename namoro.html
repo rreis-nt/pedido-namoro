@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Namora comigo?</title>
+    <script src="https://www.youtube.com/iframe_api"></script>
+    <style>
+        body {
+            top: 50%;
+            left: 50%;
+            position: absolute;
+            margin: 0;
+            transform: translate(-50%, -50%);
+            font-family: "Roboto", sans-serif;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: url('assets/wallpaper.jpg') no-repeat center center fixed;
+            background-size: cover;
+            overflow: hidden;
+        }
+
+        h1 {
+            font-weight: 300;
+            font-size: 2.5rem;
+            color: #1143D9;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.6rem;
+                text-align: center;
+                background-color: transparent;
+                padding: 0;
+                border-radius: 0;
+                box-shadow: none;
+                color: #1143D9;
+                text-shadow: 4px 4px 20px rgba(0, 0, 0, 1), 0 0 10px rgba(0, 0, 0, 0.7);
+                max-width: 90vw;
+                margin: 0 auto 20px auto;
+                word-break: break-word;
+            }
+        }
+
+        button {
+            padding: 12px 50px;
+            border-radius: 10px;
+            font-family: "Roboto", sans-serif;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: 700;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        button:first-child {
+            background-color: #0528F2;
+            box-shadow: 0 6px 15px rgba(5, 40, 242, 0.6);
+        }
+
+        button:first-child:hover {
+            background-color: #1143D9;
+            transform: scale(1.05);
+        }
+
+        button:nth-child(2) {
+            background-color: #ffffff;
+            color: #d91111;
+            box-shadow: 0 6px 15px rgba(199, 199, 199, 0.6);
+        }
+
+        button:nth-child(2):hover {
+            background-color: #ffffff;
+            color: #f20505;
+            transform: scale(1.05);
+        }
+
+        .falling {
+            transition: top 1s ease-out, transform 1s ease-out;
+        }
+
+        div.buttons {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            grid-template-rows: 1fr;
+            grid-column-gap: 100px;
+            margin-top: 30px;
+        }
+
+        #rain-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .raindrop {
+            position: absolute;
+            width: 2px;
+            height: 20px;
+            background: linear-gradient(to bottom, rgba(255, 255, 255, 0.8), rgba(173, 216, 230, 0.5));
+            animation: fall linear infinite;
+        }
+
+        @keyframes fall {
+            0% {
+                transform: translateY(-20px);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div>
+        <h1>Quer namorar comigo?</h1>
+        <div class="buttons">
+            <button id="yes-button">Sim</button>
+            <button id="no-button">Não</button>
+        </div>
+    </div>
+
+    <div id="rain-container"></div>
+
+    <div id="emoji-container" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 10;"></div>
+
+    <div id="player" style="display:none;"></div>
+
+    <script>
+        var moveButton = document.getElementById("no-button");
+        var correctlyButton = document.getElementById("yes-button");
+
+        moveButton.addEventListener("click", function () {
+            var maxWidth = window.innerWidth - moveButton.offsetWidth;
+            var maxHeight = window.innerHeight - moveButton.offsetHeight;
+            var vertical = Math.floor(Math.random() * maxWidth);
+            var horizontal = Math.floor(Math.random() * maxHeight);
+            moveButton.style.position = "absolute";
+            moveButton.style.left = vertical + "px";
+            moveButton.style.top = horizontal + "px";
+        });
+
+        // Emoji jumping animation
+        function createEmoji() {
+            const emojis = ["🎉", "😊", "🎊", "🥳", "👏"];
+            const emoji = document.createElement("div");
+            emoji.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+            emoji.style.position = "fixed";
+            emoji.style.fontSize = "2rem";
+            emoji.style.left = Math.random() * 90 + "vw";
+            emoji.style.top = "100vh";
+            emoji.style.zIndex = 1000;
+            emoji.style.userSelect = "none";
+            emoji.style.pointerEvents = "none";
+            emoji.style.transition = "transform 1.5s ease-out, top 1.5s ease-out, opacity 1.5s ease-out";
+            document.getElementById("emoji-container").appendChild(emoji);
+
+            setTimeout(() => {
+                emoji.style.top = Math.random() * 50 + "vh";
+                emoji.style.transform = "translateY(-100px)";
+                emoji.style.opacity = "1";
+            }, 50);
+
+            setTimeout(() => {
+                emoji.style.opacity = "0";
+            }, 1200);
+
+            setTimeout(() => {
+                emoji.remove();
+            }, 1500);
+        }
+
+        var emojiInterval;
+
+        correctlyButton.addEventListener("click", function () {
+            // Remove alert and add emoji animation and play music
+            if (!emojiInterval) {
+                emojiInterval = setInterval(createEmoji, 300);
+            }
+            if (player && player.playVideo) {
+                player.setVolume(10); // very low volume
+                player.playVideo();
+            }
+        });
+
+        // Rain effect
+        function createRaindrop() {
+            const raindrop = document.createElement('div');
+            raindrop.classList.add('raindrop');
+            raindrop.style.left = Math.random() * 100 + 'vw';
+            raindrop.style.animationDuration = (Math.random() * 2 + 1) + 's';
+            document.getElementById('rain-container').appendChild(raindrop);
+            setTimeout(() => {
+                raindrop.remove();
+            }, 3000);
+        }
+
+        setInterval(createRaindrop, 100);
+
+        // YouTube Iframe API player
+        var player;
+        function onYouTubeIframeAPIReady() {
+            player = new YT.Player('player', {
+                height: '0',
+                width: '0',
+                videoId: 'uaLV003llhY',
+                playerVars: {
+                    autoplay: 0,
+                    controls: 0,
+                    modestbranding: 1,
+                    loop: 1,
+                    playlist: 'uaLV003llhY',
+                    mute: 0,
+                    disablekb: 1,
+                    fs: 0,
+                    rel: 0,
+                    showinfo: 0
+                },
+                events: {
+                    'onReady': onPlayerReady
+                }
+            });
+        }
+
+        function onPlayerReady(event) {
+            event.target.setVolume(10); // very low volume
+            // Do not autoplay on load, only on button click
+        }
+    </script>
+</body>
+
+</html>
