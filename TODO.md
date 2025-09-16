@@ -1,2 +1,2 @@
-- [x] Update onYouTubeIframeAPIReady to be attached to window object
-- [ ] Verify music plays on "Sim" button click
+- [x] Remover o CSS para #oneko no index.html, pois o script oneko.js define os estilos
+- [x] Adicionar o script tag para oneko.js no index.html com o caminho correto para o GIF
