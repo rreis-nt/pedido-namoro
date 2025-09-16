@@ -28,7 +28,7 @@
         h1 {
             font-weight: 300;
             font-size: 2.5rem;
-            color: #1143D9;
+            color: #d91111;
             text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
         }
 
@@ -139,11 +139,13 @@
 
     <div id="emoji-container" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 10;"></div>
 
-    <div id="player" style="display:none;"></div>
+    <audio id="background-music" src="assets/pink-matter.mp3" preload="auto"></audio>
 
     <script>
         var moveButton = document.getElementById("no-button");
         var correctlyButton = document.getElementById("yes-button");
+        var backgroundMusic = document.getElementById("background-music");
+        var emojiInterval;
 
         moveButton.addEventListener("click", function () {
             var maxWidth = window.innerWidth - moveButton.offsetWidth;
@@ -185,16 +187,14 @@
             }, 1500);
         }
 
-        var emojiInterval;
-
         correctlyButton.addEventListener("click", function () {
             // Remove alert and add emoji animation and play music
             if (!emojiInterval) {
                 emojiInterval = setInterval(createEmoji, 300);
             }
-            if (player && player.playVideo) {
-                player.setVolume(10); // very low volume
-                player.playVideo();
+            if (backgroundMusic.paused) {
+                backgroundMusic.volume = 0.1; // very low volume
+                backgroundMusic.play();
             }
         });
 
@@ -211,36 +211,6 @@
         }
 
         setInterval(createRaindrop, 100);
-
-        // YouTube Iframe API player
-        var player;
-        function onYouTubeIframeAPIReady() {
-            player = new YT.Player('player', {
-                height: '0',
-                width: '0',
-                videoId: 'uaLV003llhY',
-                playerVars: {
-                    autoplay: 0,
-                    controls: 0,
-                    modestbranding: 1,
-                    loop: 1,
-                    playlist: 'uaLV003llhY',
-                    mute: 0,
-                    disablekb: 1,
-                    fs: 0,
-                    rel: 0,
-                    showinfo: 0
-                },
-                events: {
-                    'onReady': onPlayerReady
-                }
-            });
-        }
-
-        function onPlayerReady(event) {
-            event.target.setVolume(10); // very low volume
-            // Do not autoplay on load, only on button click
-        }
     </script>
 </body>
 
